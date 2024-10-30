@@ -31,14 +31,17 @@ export function generateAsciiMatrix(
   // Generate ASCII matrix
   const asciiMatrix = [];
   for (let i = 0; i < height; i++) {
-    let row = "";
+    const row = [];
     for (let j = 0; j < width; j++) {
       const index = (i * width + j) * 4;
       const alpha = data[index + 3];
-      row += alpha > 0 ? symbol : " ";
+      row.push(alpha > 0 ? 1 : 0);
     }
     asciiMatrix.push(row);
   }
 
-  return asciiMatrix.join("\n");
+  return asciiMatrix.reduce((acc, row) => {
+    const rowString = row.map((cell) => (cell ? symbol : " ")).join("");
+    return acc + rowString + "\n";
+  }, "");
 }
