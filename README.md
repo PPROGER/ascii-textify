@@ -1,15 +1,15 @@
 # Generate ASCII Matrix
 
-`generate-ascii-matrix` is a TypeScript function that generates an ASCII representation of text scaled to fit a specified width and height. The output is a string representation of the text where each character is replaced by a customizable symbol.
+`ascii-textify` is a TypeScript function that generates an ASCII representation of text scaled to fit a specified width and height. The output is a string representation of the text where each character is replaced by a customizable symbol.
 
 ## Installation
 
 To install the package, use `pnpm` (or `npm`):
 
 ```bash
-pnpm install generate-ascii-matrix
+pnpm add ascii-textify
 # or
-npm install generate-ascii-matrix
+npm i ascii-textify
 ```
 
 ### Import
