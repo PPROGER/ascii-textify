@@ -1,7 +1,10 @@
+import { AsciiCanvas } from "./models/AsciiCanvas";
+
 interface DrawTextOptions {
   width: number;
   height: number;
   symbol?: string;
+  existingCanvas?: HTMLCanvasElement | any;
 }
 
 export function generateAsciiMatrix(
@@ -10,10 +13,8 @@ export function generateAsciiMatrix(
 ): string {
   const { width, height, symbol = "*" } = options;
 
-  const canvas = document.createElement("canvas");
-  canvas.width = width;
-  canvas.height = height;
-  const ctx = canvas.getContext("2d");
+  const asciCanvas = new AsciiCanvas(width, height, options.existingCanvas);
+  const ctx = asciCanvas.getContext();
   if (!ctx) throw new Error("Failed to get canvas context.");
 
   // Set font size relative to canvas height

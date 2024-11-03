@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
+    "dev": "nodemon --watch src --exec ts-node src/dev.ts",
     "build": "tsc",
     "prepublishOnly": "pnpm run build"
   },
@@ -25,6 +26,11 @@
   ],
   "devDependencies": {
     "@types/node": "^22.8.4",
+    "nodemon": "^3.1.7",
+    "ts-node": "^10.9.2",
     "typescript": "^5.6.3"
+  },
+  "dependencies": {
+    "canvas": "^2.11.2"
   }
 }

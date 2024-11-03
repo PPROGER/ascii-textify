@@ -15,7 +15,7 @@ npm i ascii-textify
 ### Import
 
 ```typescript
-import { generateAsciiMatrix } from "generate-ascii-matrix";
+import { generateAsciiMatrix } from "ascii-textify";
 
 const text = "PPROGER";
 const options = {
