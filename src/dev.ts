@@ -1,5 +1,5 @@
 import { createCanvas } from 'canvas'
-import {generateAsciiMatrix} from "./index";
+import {createAsciiArtString, generateAsciiImage} from "./index";
 
 const text = "PPROGER";
 const options = {
@@ -9,5 +9,11 @@ const options = {
 	existingCanvas: createCanvas(200, 100)
 };
 
-const asciiArt = generateAsciiMatrix(text, options);
+const asciiArt = createAsciiArtString(text, options);
+const asciiImage = generateAsciiImage(text, {
+	...options,
+	scaleFactor: 2
+});
+
 console.log(asciiArt);
+console.log(asciiImage);

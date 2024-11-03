@@ -7,42 +7,93 @@ interface DrawTextOptions {
   existingCanvas?: HTMLCanvasElement | any;
 }
 
-export function generateAsciiMatrix(
+/**
+ * @description Generates an ASCII representation of the given text using a binary matrix.
+ */
+export function createAsciiArtString(
   text: string,
   options: DrawTextOptions
 ): string {
-  const { width, height, symbol = "*" } = options;
+  const { symbol = "*" } = options;
 
-  const asciCanvas = new AsciiCanvas(width, height, options.existingCanvas);
-  const ctx = asciCanvas.getContext();
+  const asciiMatrix = renderTextToAsciiMatrix(text, options);
+  return asciiMatrix.reduce((acc, row) => {
+    const rowString = row.map((cell) => (cell ? symbol : " ")).join("");
+    return acc + rowString + "\n";
+  }, "");
+}
+
+interface GenerateImageOptions extends DrawTextOptions {
+  scaleFactor?: number;
+}
+
+/**
+ * @description Generates a scaled image of ASCII art and returns it as a data URL.
+ */
+export function generateAsciiImage(
+  text: string,
+  options: GenerateImageOptions
+): string {
+  const { symbol = "*", scaleFactor = 4 } = options;
+  const { width, height, existingCanvas } = options;
+
+  const scaledMatrix = renderTextToAsciiMatrix(text, {
+    width: width / scaleFactor,
+    height: height / scaleFactor,
+    existingCanvas,
+  });
+
+  const asciiCanvas = new AsciiCanvas(width, height, existingCanvas);
+  const ctx = asciiCanvas.getContext();
   if (!ctx) throw new Error("Failed to get canvas context.");
 
-  // Set font size relative to canvas height
-  const fontSize = Math.min(width, height) / 4;
+  ctx.clearRect(0, 0, width, height);
+  const fontSize = Math.round(width / height) * scaleFactor;
   ctx.font = `${fontSize}px monospace`;
 
-  // Clear canvas and draw text
+  scaledMatrix.forEach((row, rowIndex) => {
+    row.forEach((cell, colIndex) => {
+      const x = colIndex * scaleFactor;
+      const y = rowIndex * scaleFactor;
+
+      if (cell) ctx.fillText(symbol, x, y);
+    });
+  });
+
+  return asciiCanvas.getCanvas().toDataURL();
+}
+
+/**
+ * @description Renders the given text to an ASCII matrix based on the provided options.
+ */
+export function renderTextToAsciiMatrix(
+  text: string,
+  options: Omit<DrawTextOptions, "symbol">
+): number[][] {
+  const { width, height, existingCanvas } = options;
+
+  const asciiCanvas = new AsciiCanvas(width, height, existingCanvas);
+  const ctx = asciiCanvas.getContext();
+  if (!ctx) throw new Error("Failed to get canvas context.");
+
+  const fontSize = Math.min(width, height) / 4;
+  ctx.font = `${fontSize}px monospace`;
   ctx.clearRect(0, 0, width, height);
   ctx.fillText(text, 10, fontSize);
 
-  // Extract image data
   const imageData = ctx.getImageData(0, 0, width, height);
-  const data = imageData.data;
+  const pixelData = imageData.data;
 
-  // Generate ASCII matrix
   const asciiMatrix = [];
-  for (let i = 0; i < height; i++) {
+  for (let y = 0; y < height; y++) {
     const row = [];
-    for (let j = 0; j < width; j++) {
-      const index = (i * width + j) * 4;
-      const alpha = data[index + 3];
+    for (let x = 0; x < width; x++) {
+      const pixelIndex = (y * width + x) * 4;
+      const alpha = pixelData[pixelIndex + 3];
       row.push(alpha > 0 ? 1 : 0);
     }
     asciiMatrix.push(row);
   }
 
-  return asciiMatrix.reduce((acc, row) => {
-    const rowString = row.map((cell) => (cell ? symbol : " ")).join("");
-    return acc + rowString + "\n";
-  }, "");
+  return asciiMatrix;
 }
