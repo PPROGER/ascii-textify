@@ -53,7 +53,8 @@ console.log(asciiArtImage);
 * `existingCanvas`: (optional): An existing `HTMLCanvasElement` instance. Useful for server-side usage with `node-canvas` or similar libraries. If not provided, a new canvas will be created in the browser using `document`.
 
 ### For `generateAsciiImage`, you can also pass:
-* `scaleFactor` (optional): Scaling factor to increase or decrease the pixel density of the ASCII art. Default is `4`.
+* `scaleFactor` (optional): Scaling factor to increase or decrease the pixel density of the ASCII art. Default is `1`.
+* `color` (optional): color is set as a string or hex
 
 ## License
 

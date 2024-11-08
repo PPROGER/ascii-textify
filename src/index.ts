@@ -25,6 +25,7 @@ export function createAsciiArtString(
 
 interface GenerateImageOptions extends DrawTextOptions {
   scaleFactor?: number;
+  color?: string;
 }
 
 /**
@@ -35,15 +36,19 @@ export function generateAsciiImage(
   options: GenerateImageOptions
 ): string {
   const { symbol = "*", scaleFactor = 4 } = options;
-  const { width, height, existingCanvas } = options;
+  const { width, height, existingCanvas, color } = options;
 
   const scaledMatrix = renderTextToAsciiMatrix(text, {
-    width: width / scaleFactor,
-    height: height / scaleFactor,
+    width: width,
+    height: height,
     existingCanvas,
   });
 
-  const asciiCanvas = new AsciiCanvas(width, height, existingCanvas);
+  const asciiCanvas = new AsciiCanvas(
+    width,
+    height,
+    existingCanvas
+  );
   const ctx = asciiCanvas.getContext();
   if (!ctx) throw new Error("Failed to get canvas context.");
 
@@ -56,6 +61,7 @@ export function generateAsciiImage(
       const x = colIndex * scaleFactor;
       const y = rowIndex * scaleFactor;
 
+      ctx.fillStyle = color ?? "black";
       if (cell) ctx.fillText(symbol, x, y);
     });
   });

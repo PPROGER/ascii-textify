@@ -3,7 +3,7 @@ import {createAsciiArtString, generateAsciiImage} from "./index";
 
 const text = "PPROGER";
 const options = {
-  width: 200,
+  width: 550,
   height: 100,
   symbol: "*",
 	existingCanvas: createCanvas(200, 100)
@@ -12,7 +12,9 @@ const options = {
 const asciiArt = createAsciiArtString(text, options);
 const asciiImage = generateAsciiImage(text, {
 	...options,
-	scaleFactor: 2
+	scaleFactor: 4,
+	color: "#4287f5",
+	symbol: "*"
 });
 
 console.log(asciiArt);
